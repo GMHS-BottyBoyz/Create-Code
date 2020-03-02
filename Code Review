@@ -1,0 +1,159 @@
+#include <kipr/wombat.h>
+void driveForward (int distance);
+void driveBackward (int distance);
+void turnRight (int angle);
+void turnLeft (int angle);
+void Open_Plow (int servo);
+void Open2_Plow (int servo);
+void Close_Plow (int servo);
+void Raise_Igus (int count);
+void Lower_Igus (int count);
+void Stop_At_Line (int value);
+void followLine (int distance);
+int Open=300;
+int Open2=100;
+int Close=1320;
+int IgusUp=5000;
+int IgusDown=-5000;
+int amount=0;
+int count12=12;
+int Black=2400;
+    
+int main()
+{
+    create_connect();
+    Open_Plow(1);
+    turnLeft(83);
+    Open2_Plow(1);
+    driveForward(12);
+    Stop_At_Line(1);
+    Close_Plow(1);
+    msleep(500);
+    turnRight(90);
+    driveForward(20);
+    turnRight(90);
+    driveForward(18);
+    turnRight(90);
+    driveForward(11);
+    Open_Plow(1);
+    driveBackward(10);
+    turnRight(90);
+    Close_Plow(1);
+    create_stop();
+    //msleep(8000);
+    driveForward(2);
+    followLine(10);
+    turnRight(90);
+    driveForward(1);
+    Raise_Igus(0);
+    msleep(20000);
+    turnLeft(90);
+    create_disconnect();
+    return 0;
+}
+void driveForward (int distance)
+{
+    set_create_distance(0);
+    while (abs(get_create_distance())<2*distance)
+    {
+        create_drive_direct(155,157);
+        msleep(10);
+    }
+}
+void driveBackward(int distance)
+{
+    set_create_distance(0);
+    while (abs(get_create_distance())<2*distance)
+    {
+        create_drive_direct(-155,-157);
+        msleep(10);
+    }
+}
+void turnRight (int angle)
+{
+    set_create_total_angle(0);
+    while (abs(get_create_total_angle())<.405*angle)
+    {
+        create_drive_direct(150,-150);
+        msleep(10);
+    }
+}
+void turnLeft (int angle)
+{
+    set_create_total_angle(0);
+    while (abs(get_create_total_angle())<.405*angle)
+    {
+        create_drive_direct(-150,150);
+        msleep(10);
+    }
+}
+void Open_Plow(int servo)
+{
+    enable_servos();
+    set_servo_position(0,Open);
+    msleep(100);
+    disable_servos();
+}
+void Close_Plow(int servo)
+{
+    enable_servos();
+    set_servo_position(0,Close);
+    msleep(500);
+    disable_servos();
+}
+
+void Raise_Igus(int count)
+{
+    cmpc(0);
+    while((gmpc(0))<IgusUp)
+    {
+        motor(0,25);
+        msleep(50);
+    }
+    ao();
+    msleep(200);
+}
+void Lower_Igus(int count)
+{
+    cmpc(0);
+    while((gmpc(0))>IgusDown)
+    {
+        motor(0,-25);
+        msleep(50);
+    }
+    ao();
+    msleep(200);
+}
+void Open2_Plow(int servo)
+{
+    enable_servos();
+    set_servo_position(0,Open2);
+    msleep(100);
+    disable_servos();
+}
+void Stop_At_Line(int count)
+{
+    while(get_create_lcliff_amt()<Black)
+    {
+        create_drive_direct (155,157);
+        msleep(30);
+    }
+}
+void followLine (int distance)
+{
+	set_create_distance(0);
+    while (abs(get_create_distance())<8.33*distance)
+    {
+        while(get_create_lfcliff_amt()>2400)
+        {
+           create_drive_direct(200,75);
+            msleep(10);
+        }
+        while(get_create_lfcliff_amt()<2400)
+        {
+            create_drive_direct(75,200);
+            msleep(10);
+        }
+    }
+    create_stop();
+}
