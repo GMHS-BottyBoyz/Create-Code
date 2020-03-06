@@ -10,9 +10,10 @@ void Raise_Igus (int count);
 void Lower_Igus (int count);
 void Stop_At_Line (int value);
 void followLine (int distance);
-int Open=300;
-int Open2=100;
-int Close=1320;
+void Stay (int time);
+int Open=1320;
+int Open2=1220;
+int Close=2047;
 int IgusUp=5000;
 int IgusDown=-5000;
 int amount=0;
@@ -36,16 +37,17 @@ int main()
     turnRight(90);
     driveForward(11);
     Open_Plow(1);
-    driveBackward(10);
-    turnRight(90);
+    /*driveBackward(10);
+    Stay(4000);
+    turnRight(40);
     Close_Plow(1);
-    driveForward(2);
-    followLine(10);
+    Stay(4000);
+    driveForward(10);
     turnRight(90);
-    driveForward(1);
+    driveForward(10);
     Raise_Igus(0);
     msleep(20000);
-    turnLeft(90);
+    turnLeft(90);*/
     create_disconnect();
     return 0;
 }
@@ -155,3 +157,15 @@ void followLine (int distance)
     }
     create_stop();
 }
+void Stay (int time)
+{
+    create_stop();
+    msleep(time);
+}
+
+
+
+
+
+
+
