@@ -39,8 +39,6 @@ int main()
     driveBackward(10);
     turnRight(90);
     Close_Plow(1);
-    create_stop();
-    //msleep(8000);
     driveForward(2);
     followLine(10);
     turnRight(90);
